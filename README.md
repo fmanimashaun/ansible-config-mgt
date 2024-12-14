@@ -88,3 +88,30 @@ git checkout -b feature/prj-001
 
 git push -u origin feature/prj-001
 ```
+
+### Step 8: Update the dev.yml and common.yml
+dev.yml:
+```bash
+[nfs]
+172.31.11.175 ansible_ssh_user=ec2-user
+
+[webs]
+172.31.13.144 ansible_ssh_user=ec2-user
+172.31.10.244 ansible_ssh_user=ec2-user
+172.31.10.220 ansible_ssh_user=ec2-user
+
+[db]
+172.31.11.187 ansible_ssh_user=ec2-user
+
+[lb]
+172.31.9.89 ansible_ssh_user=ubuntu
+
+[all:vars]
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+```
+
+- **nfs-server:** Defines the NFS server.
+- **web-servers:** Defines the web servers.
+- **db-server:** Defines the database server.
+- **lb-server:** Defines the load balancer.
+- **all:vars:** Defines common SSH arguments for all hosts.
