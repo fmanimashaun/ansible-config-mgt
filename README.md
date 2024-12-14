@@ -90,6 +90,8 @@ git push -u origin feature/prj-001
 ```
 
 ### Step 8: Update the dev.yml and common.yml
+
+1. Update the files
 dev.yml:
 ```bash
 [nfs]
@@ -115,3 +117,7 @@ ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 - **db-server:** Defines the database server.
 - **lb-server:** Defines the load balancer.
 - **all:vars:** Defines common SSH arguments for all hosts.
+
+Push the update to git and create a PR, omce created, merge to main and check the jenkins if it trigger the build flow
+
+change back to the main and run git pull to pull the latest
