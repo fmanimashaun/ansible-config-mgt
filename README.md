@@ -81,3 +81,10 @@ Follow the steps in the [DevOps Tooling Website Deployment with CI/CD - Jenkins]
 2. Configure a webhook in Github and set the webhook to trigger ansible build
 3. Configure a post-build job to save all (**) files as describes in the [DevOps Tooling Website Deployment with CI/CD - Jenkins](../Projects_documenration/Tooling_website_deployment_automation_with_continuous_integration-jenkins/README.md) project.
 4. Test the setup by making some changes to the README.md file.
+
+### Step 7: create a new branch and push to githib
+```bash
+git checkout -b feature/prj-001
+
+git push -u origin feature/prj-001
+```
