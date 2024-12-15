@@ -121,3 +121,10 @@ ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 Push the update to git and create a PR, omce created, merge to main and check the jenkins if it trigger the build flow
 
 change back to the main and run git pull to pull the latest
+
+run the ansible playbook, however confirm the ssh agent is forwarded by running `ssh-add -l`, if you get an error, run `export SSH_AUTH_SOCK=$(ls -t /tmp/ssh-**/* | head -1)`
+
+then check again with `ssh-add -l`
+
+
+ansible-playbook -i inventory/dev/yml playbooks/common.yml
