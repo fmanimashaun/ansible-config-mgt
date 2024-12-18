@@ -130,3 +130,33 @@ then check again with `ssh-add -l`
 
 
 ansible-playbook -i inventory/dev/yml playbooks/common.yml
+
+
+### **Steps to Resolve the Issue**
+
+#### 1. **Change Ownership to Jenkins User**
+You need to make sure that the directory is owned by the `jenkins` user and group. To do this, run the following command:
+
+```bash
+sudo chown -R jenkins:jenkins /home/ubuntu/ansible-config-artifact
+```
+
+This will change the ownership of the directory to the `jenkins` user and group, allowing Jenkins to access and modify it.
+
+#### 2. **Verify Permissions**
+While the permissions are already `777` (which gives full read/write/execute access to all users), it’s a good practice to restrict permissions if possible. Since Jenkins now owns the directory, you can limit permissions to the following:
+
+```bash
+sudo chmod -R 755 /home/ubuntu/ansible-config-artifact
+```
+
+This will ensure that the directory is readable and executable by everyone but only writable by the `jenkins` user.
+
+#### 3. **Re-run the Jenkins Build**
+After changing ownership and verifying the permissions, try running the Jenkins job again. This should resolve the access denied issue.
+
+---
+
+### **Why This Works:**
+- **Jenkins User**: By changing the ownership to the `jenkins` user, you ensure Jenkins can read/write/execute as necessary.
+- **Permissions**: The `755` permission setting provides sufficient access for Jenkins while avoiding overly permissive settings like `777`.
