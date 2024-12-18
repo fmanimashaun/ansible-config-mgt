@@ -122,6 +122,8 @@ Push the update to git and create a PR, omce created, merge to main and check th
 
 change back to the main and run git pull to pull the latest
 
+used
+
 run the ansible playbook, however confirm the ssh agent is forwarded by running `ssh-add -l`, if you get an error, run `export SSH_AUTH_SOCK=$(ls -t /tmp/ssh-**/* | head -1)`
 
 then check again with `ssh-add -l`
