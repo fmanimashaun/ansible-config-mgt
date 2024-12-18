@@ -131,15 +131,6 @@ then check again with `ssh-add -l`
 
 ansible-playbook -i inventory/dev/yml playbooks/common.yml
 
-steps:
-
-1. create the ansible-config-artifact directory
-sudo mkdir /home/ubuntu/ansible-config-artifact
-
-
-sudo chmod 777 -R /home/ubuntu/ansible-config-artifact
-
-sudo usermod -a -G ubuntu jenkins
 
 
 
