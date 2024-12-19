@@ -142,4 +142,10 @@ sudo chmod 777 -R /home/ubuntu/ansible-config-artifact
 sudo usermod -a -G ubuntu jenkins
 
 
+6. clone the `ansible-config-mgt` repo on your local machine for development
+`git clone https://github.com/fmanimashaun/ansible-config-mgt.git`
+`cd ansible-config-mgt` and open on vscode
+
+7. create a new branch called `features/prj-002` from the `main` branch using `git checkout -b features/prj-001-refactor`
+
 
