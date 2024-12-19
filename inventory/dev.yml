@@ -1,16 +1,28 @@
-[nfs_server]
-172.31.11.175 ansible_ssh_user=ec2-user
+all:
+  vars:
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
 
-[web_servers]
-172.31.13.144 ansible_ssh_user=ec2-user
-172.31.10.244 ansible_ssh_user=ec2-user
-172.31.10.220 ansible_ssh_user=ec2-user
+  children:
+    nfs_server:
+      hosts:
+        172.31.11.175:
+          ansible_ssh_user: ec2-user
 
-[db_server]
-172.31.11.187 ansible_ssh_user=ec2-user
+    web_servers:
+      hosts:
+        172.31.13.144:
+          ansible_ssh_user: ec2-user
+        172.31.10.244:
+          ansible_ssh_user: ec2-user
+        172.31.10.220:
+          ansible_ssh_user: ec2-user
 
-[lb_server]
-172.31.9.89 ansible_ssh_user=ubuntu
+    db_server:
+      hosts:
+        172.31.11.187:
+          ansible_ssh_user: ec2-user
 
-[all:vars]
-ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+    lb_server:
+      hosts:
+        172.31.9.89:
+          ansible_ssh_user: ubuntu
