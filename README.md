@@ -126,6 +126,7 @@ run the ansible playbook, however confirm the ssh agent is forwarded by running 
 
 then check again with `ssh-add -l`
 
+Run playbook:
 ```bash
 ansible-playbook -i inventory/dev/yml playbooks/common.yml
 ```
