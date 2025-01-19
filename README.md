@@ -1,5 +1,5 @@
 # ansible-config-mgt
-### Step 1: Install ansible
+### Step 1: Install ansible on server
 ```bash
 sudo apt update
 sudo apt install ansible -y
