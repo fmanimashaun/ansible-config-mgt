@@ -1,22 +1,22 @@
-- name: update web, nfs, and db servers
+---
+- name: Update web, nfs, and db servers
   hosts: nfs_server, web_servers, db_server
-  become: yes
+  become: true
   tasks:
-    - name: ensure wireshark is at the latest version
-      yum:
+    - name: Ensure wireshark is installed
+      ansible.builtin.dnf:
         name: wireshark
-        state: latest
+        state: present
 
-- name: update LB server
+- name: Update LB server
   hosts: lb_server
-  become: yes
+  become: true
   tasks:
     - name: Update apt repo
-      apt:
-        update_cache: yes
+      ansible.builtin.apt:
+        update_cache: true
 
-    - name: ensure wireshark is at the latest version
-      apt:
+    - name: Ensure wireshark is installed
+      ansible.builtin.apt:
         name: wireshark
-        state: latest
-
+        state: present
