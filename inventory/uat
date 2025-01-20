@@ -1,0 +1,6 @@
+[uat_web_servers]
+172.31.8.132 ansible_ssh_user=ec2-user
+172.31.1.190 ansible_ssh_user=ec2-user
+
+[all:vars]
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
