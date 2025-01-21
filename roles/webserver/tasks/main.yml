@@ -1,0 +1,60 @@
+---
+- name: Install Apache (httpd)
+  become: true
+  ansible.builtin.dnf:
+    name: httpd
+    state: present
+
+- name: Start and enable Apache
+  become: true
+  ansible.builtin.systemd:
+    name: httpd
+    enabled: true
+    state: started
+
+- name: Install PHP
+  become: true
+  ansible.builtin.dnf:
+    name: php
+    state: present
+
+- name: Restart Apache
+  become: true
+  ansible.builtin.systemd:
+    name: httpd
+    state: restarted
+
+- name: Install git
+  become: true
+  ansible.builtin.dnf:
+    name: git
+    state: present
+
+- name: Clone the repository
+  become: true
+  ansible.builtin.git:
+    repo: https://github.com/fmanimashaun/tooling.git
+    dest: /var/www/html/
+    force: true
+    version: main
+
+- name: Copy html content to one level up
+  become: true
+  ansible.builtin.copy:
+    src: /var/www/html/html/
+    dest: /var/www/html/
+    remote_src: true
+    mode: "0755"
+
+- name: Start and enable Apache
+  become: true
+  ansible.builtin.systemd:
+    name: httpd
+    enabled: true
+    state: started
+
+- name: Recursively remove /var/www/html/html directory
+  become: true
+  ansible.builtin.file:
+    path: /var/www/html/html
+    state: absent
