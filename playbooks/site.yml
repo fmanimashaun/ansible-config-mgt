@@ -1,6 +1,0 @@
----
-- name: Common tasks play
-  ansible.builtin.import_playbook: ../static-assignments/common.yml
-
-- name: UAT webservers play
-  ansible.builtin.import_playbook: ../static-assignments/uat-webservers.yml
