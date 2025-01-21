@@ -1,5 +1,0 @@
----
-- name: UAT webservers
-  hosts: uat_web_servers
-  roles:
-    - webserver
