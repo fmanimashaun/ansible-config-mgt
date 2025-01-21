@@ -1,0 +1,24 @@
+---
+- name: Update web, nfs, and db servers
+  hosts: nfs_server, web_servers, db_server
+  become: true
+  become_user: root
+  tasks:
+    - name: Delete wireshark
+      ansible.builtin.dnf:
+        name: wireshark
+        state: removed
+
+- name: Update LB server
+  hosts: lb_server
+  become: true
+  remote_user: ubuntu
+  become_user: root
+  tasks:
+    - name: Delete wireshark
+      ansible.builtin.apt:
+        name: wireshark
+        state: absent
+        autoremove: true
+        purge: true
+        autoclean: true
