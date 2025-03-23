@@ -1,5 +1,5 @@
 # virtualenv
-/.venv
+ansible-env/
 
 # IDE
-/.vscode
+.vscode/
