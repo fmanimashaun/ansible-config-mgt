@@ -153,3 +153,5 @@ Run playbook:
 ```bash
 ansible-playbook -i inventory/dev/yml playbooks/common.yml
 ```
+
+close
