@@ -1,11 +1,13 @@
 ---
-- name: Collate variables from env specific files, if it exists
+- name: Collate variables from env specific files
   hosts: all
   tasks:
-    - name: Loopomg through list of available files
-      ansible.builtin.include_vars: "{{ item }}"
-      with_first_found:
-        - files:
+    - name: Loop through list of available files
+      ansible.builtin.include_vars:
+        file: "{{ lookup('first_found', params) }}"
+      vars:
+        params:
+          files:
             - dev.yml
             - uat.yml
             - prod.yml
