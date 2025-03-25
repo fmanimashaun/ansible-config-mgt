@@ -1,0 +1,8 @@
+---
+- name: Load dynamic environment variables
+  hosts: all
+  tasks:
+    - name: Include environment variables from dynamic assignments
+      ansible.builtin.include_vars: "{{ lookup('first_found', {'files': ['{{ inventory_file | basename | splitext | first }}.yml'], 'paths': ['{{ playbook_dir }}/../env-vars']}) }}"
+  tags:
+    - always
