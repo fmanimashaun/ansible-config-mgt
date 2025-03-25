@@ -1,3 +1,21 @@
 ---
-- name: UAT webservers play
-  ansible.builtin.import_playbook: ../static-assignments/uat-webserver.yml
+- name: Load dynamic variables
+  hosts: all
+  tasks:
+    - name: Include environment variables from dynamic assignments
+      ansible.builtin.include_vars: "../dynamic-assignments/env-vars.yml"
+  tags:
+    - always
+
+# Set up MySQL on database servers
+- name: Set up MySQL
+  hosts: db
+  become: true
+  vars_files:
+    - ../env-vars/dev.yml
+  roles:
+    - dbserver
+
+# Set up Apache and PHP on web servers
+- name: Import UAT webservers play
+  import_playbook: "../static-assignments/uat-webserver.yml"
