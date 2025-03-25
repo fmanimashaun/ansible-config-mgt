@@ -3,7 +3,7 @@
   hosts: all
   tasks:
     - name: Include environment variables from dynamic assignments
-      ansible.builtin.include_vars: "../dynamic-assignments/env-vars.yml"
+      ansible.builtin.include_vars: "../dynamics-assignments/env-vars.yml"
   tags:
     - always
 
