@@ -1,0 +1,122 @@
+---
+# Ensure necessary directories exist before any operations
+- name: Create required directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - /db
+    - /home/recovery/logs
+
+# Partition EBS volumes with parted
+- name: Partition EBS volumes with parted
+  ansible.builtin.parted:
+    device: "{{ item }}"
+    number: 1
+    state: present
+    part_type: primary
+    fs_type: ext4
+    align: optimal
+  loop:
+    - /dev/xvdb
+    - /dev/xvdc
+    - /dev/xvdd
+  register: parted_results
+
+# Create physical volumes on new partitions
+- name: Create physical volumes on new partitions
+  ansible.builtin.command: "pvcreate {{ item }}"
+  loop:
+    - /dev/xvdb1
+    - /dev/xvdc1
+    - /dev/xvdd1
+  args:
+    creates: "{{ item }}"
+
+# Create volume group 'dbdata-vg'
+- name: Create volume group 'dbdata-vg'
+  ansible.posix.lvg:
+    vg: dbdata-vg
+    pvs:
+      - /dev/xvdb1
+      - /dev/xvdc1
+      - /dev/xvdd1
+
+- name: Pause for 5 seconds to allow VG recognition
+  ansible.builtin.pause:
+    seconds: 5
+
+# Get the total size of volume group 'dbdata-vg' in gigabytes
+- name: Get total size of volume group dbdata-vg
+  ansible.builtin.command: "vgs --noheadings --units g --nosuffix -o vg_size dbdata-vg"
+  register: vg_size_cmd
+  changed_when: false
+
+- name: Set VG total size fact
+  ansible.builtin.set_fact:
+    vg_total_size: "{{ vg_size_cmd.stdout | trim | float }}"
+
+- name: Debug VG total size
+  ansible.builtin.debug:
+    msg: "Volume group total size: {{ vg_total_size }}G"
+
+# Calculate half the VG total size for the logical volumes
+- name: Set half VG size for logical volumes
+  ansible.builtin.set_fact:
+    half_vg_size: "{{ (vg_total_size / 2) | round(0, 'floor') }}"
+
+- name: Debug half VG size
+  ansible.builtin.debug:
+    msg: "Half of VG size: {{ half_vg_size }}G"
+
+# Create logical volume for database and log data using dynamically calculated size
+- name: Create logical volumes for database data and logs using dynamically calculated size
+  ansible.posix.lvol:
+    vg: dbdata-vg
+    lv: "{{ item }}"
+    size: "{{ half_vg_size }}g"
+  loop:
+    - db-lv
+    - log-lv
+
+
+# Create ext4 filesystem on the new logical volumes
+- name: Create ext4 filesystem on the new logical volumes
+  ansible.builtin.filesystem:
+    fstype: ext4
+    dev: "/dev/dbdata-vg/{{ item }}"
+  loop:
+    - db-lv
+    - log-lv
+
+# Backup current /var/log to /home/recovery/logs (to preserve existing log files)
+- name: Backup current /var/log to /home/recovery/logs
+  ansible.builtin.command: "rsync -av /var/log/ /home/recovery/logs/"
+  args:
+    warn: false
+
+# Mount the logical volume for database and log data persistently to /db and /var/log respectively
+- name: Mount logical volumes persistently
+  ansible.builtin.mount:
+    path: "{{ item.path }}"
+    src: "{{ item.src }}"
+    fstype: ext4
+    opts: defaults
+    state: mounted
+  loop:
+    - { path: "/db", src: "/dev/dbdata-vg/db-lv" }
+    - { path: "/var/log", src: "/dev/dbdata-vg/log-lv" }
+
+
+# Restore the original /var/log contents from the backup
+- name: Restore /var/log from backup
+  ansible.builtin.command: "rsync -av /home/recovery/logs/ /var/log/"
+  args:
+    warn: false
+
+# Delete the backup directory /home/recovery/logs after restoration
+- name: Delete backup directory /home/recovery/logs
+  ansible.builtin.file:
+    path: /home/recovery/logs
+    state: absent

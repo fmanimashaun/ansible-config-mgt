@@ -2,6 +2,9 @@
 # Variable configuration.
 - ansible.builtin.include_tasks: variables.yml
 
+# Include LVM tasks (make sure this runs before any MySQL setup tasks).
+- ansible.builtin.include_tasks: lvm.yml
+
 # Setup/install tasks.
 - ansible.builtin.include_tasks: setup-RedHat.yml
   when: ansible_os_family == 'RedHat'
