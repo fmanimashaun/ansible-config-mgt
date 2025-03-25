@@ -1,0 +1,17 @@
+---
+- name: Collate variables from env specific files, if it exists
+  hosts: all
+  tasks:
+    - name: Loopomg through list of available files
+      ansible.builtin.include_vars: "{{ item }}"
+      with_first_found:
+        - files:
+            - dev.yml
+            - uat.yml
+            - prod.yml
+            - stage.yml
+          paths:
+            - "{{ playbook_dir }}/../env-vars/"
+        
+  tags:
+    - always
