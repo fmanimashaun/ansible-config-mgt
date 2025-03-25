@@ -1,8 +1,16 @@
 ---
-- name: Load dynamic environment variables
+- name: Collate variables from env specific files, if it exists
   hosts: all
   tasks:
-    - name: Include environment variables from dynamic assignments
-      ansible.builtin.include_vars: "{{ lookup('first_found', {'files': ['{{ inventory_file | basename | splitext | first }}.yml'], 'paths': ['{{ playbook_dir }}/../env-vars']}) }}"
+    - name: Loopomg through list of available files
+      ansible.builtin.include_vars: "{{ item }}"
+      with_first_found:
+        - files:
+            - dev.yml
+            - uat.yml
+            - prod.yml
+            - stage.yml
+          paths:
+            - "{{ playbook_dir }}/../env-vars/"
   tags:
     - always
