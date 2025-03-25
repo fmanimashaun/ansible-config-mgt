@@ -5,10 +5,6 @@
   with_first_found:
     - files:
         - "{{ inventory_file | basename | splitext | first }}.yml"
-        - dev.yml
-        - staging.yml
-        - prod.yml
-        - uat.yml
       paths:
         - "{{ playbook_dir }}/../env-vars"
   tags:
