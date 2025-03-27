@@ -8,6 +8,6 @@
         - prod.yml
         - uat.yml
       paths:
-        - "{{ playbook_dir }}/../env-vars"
+        - "{{ playbook_dir }}/../dynamics-assignments/env-vars"
   tags:
     - always
