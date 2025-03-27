@@ -1,4 +1,10 @@
 ---
+# Install the LVM2 package
+- name: Install LVM2 package
+  ansible.builtin.package:
+    name: lvm2
+    state: present
+
 # Ensure necessary directories exist before any operations
 - name: Create required directories
   ansible.builtin.file:
