@@ -1,9 +1,8 @@
----
-- name: Install git
+- name: Check if tooling database import has been performed
   become: true
-  ansible.builtin.dnf:
-    name: git
-    state: present
+  ansible.builtin.stat:
+    path: /var/lib/mysql/tooling_import_complete
+  register: tooling_import_marker
 
 - name: Clone the tooling repository using environment variable
   become: true
@@ -12,6 +11,7 @@
     dest: /tmp/tooling
     version: main
     force: true
+  when: not tooling_import_marker.stat.exists
 
 - name: Import tooling database dump using MySQL root credentials
   become: true
@@ -22,9 +22,18 @@
     name: tooling
     state: import
     target: /tmp/tooling/tooling-db.sql
+  when: not tooling_import_marker.stat.exists
+
+- name: Create marker file indicating tooling database import was completed
+  become: true
+  ansible.builtin.file:
+    path: /var/lib/mysql/tooling_import_complete
+    state: touch
+  when: not tooling_import_marker.stat.exists
 
 - name: Remove the cloned tooling repository from /tmp
   become: true
   ansible.builtin.file:
     path: /tmp/tooling
     state: absent
+  when: not tooling_import_marker.stat.exists
