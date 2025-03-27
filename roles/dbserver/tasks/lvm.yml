@@ -99,8 +99,6 @@
 # Backup current /var/log to /home/recovery/logs (to preserve existing log files)
 - name: Backup current /var/log to /home/recovery/logs
   ansible.builtin.command: "rsync -av /var/log/ /home/recovery/logs/"
-  args:
-    warn: false
 
 # Mount the logical volume for database and log data persistently to /db and /var/log respectively
 - name: Mount logical volumes persistently
@@ -118,8 +116,6 @@
 # Restore the original /var/log contents from the backup
 - name: Restore /var/log from backup
   ansible.builtin.command: "rsync -av /home/recovery/logs/ /var/log/"
-  args:
-    warn: false
 
 # Delete the backup directory /home/recovery/logs after restoration
 - name: Delete backup directory /home/recovery/logs
