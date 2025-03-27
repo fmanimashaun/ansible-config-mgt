@@ -1,18 +1,13 @@
 ---
-- name: Collate variables from env specific files
-  hosts: all
-  tasks:
-    - name: Loop through list of available files
-      ansible.builtin.include_vars:
-        file: "{{ lookup('first_found', params) }}"
-      vars:
-        params:
-          files:
-            - dev.yml
-            - uat.yml
-            - prod.yml
-            - stage.yml
-          paths:
-            - "{{ playbook_dir }}/../env-vars/"
+- name: Load environment variables
+  ansible.builtin.include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - dev.yml
+        - stage.yml
+        - prod.yml
+        - uat.yml
+      paths:
+        - "{{ playbook_dir }}/../env-vars"
   tags:
     - always

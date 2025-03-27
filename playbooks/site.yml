@@ -1,9 +1,10 @@
 ---
 - name: Load dynamic variables
   hosts: all
+  become: true
   tasks:
     - name: Include environment variables from dynamic assignments
-      ansible.builtin.include_vars: "../dynamics-assignments/env-vars.yml"
+      ansible.builtin.include_tasks: "../dynamics-assignments/env-vars.yml"
   tags:
     - always
 
@@ -18,4 +19,4 @@
 
 # Set up Apache and PHP on web servers
 - name: Import UAT webservers play
-  import_playbook: "../static-assignments/uat-webserver.yml"
+  ansible.builtin.import_playbook: "../static-assignments/uat-webserver.yml"
