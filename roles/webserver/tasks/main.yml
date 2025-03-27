@@ -27,7 +27,7 @@
 - name: Clone the repository
   become: true
   ansible.builtin.git:
-    repo: https://github.com/fmanimashaun/tooling.git
+    repo: "{{ tooling_repo }}"
     dest: /var/www/html/
     force: true
     version: main
