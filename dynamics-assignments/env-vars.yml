@@ -3,10 +3,7 @@
   ansible.builtin.include_vars: "{{ item }}"
   with_first_found:
     - files:
-        - dev.yml
-        - stage.yml
-        - prod.yml
-        - uat.yml
+        - "{{ inventory_file | basename | splitext | first }}.yml"
       paths:
         - "{{ playbook_dir }}/../dynamics-assignments/env-vars"
   tags:
