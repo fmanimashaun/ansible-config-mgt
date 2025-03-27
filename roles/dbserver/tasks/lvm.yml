@@ -70,7 +70,7 @@
 # Calculate half the VG total size for the logical volumes
 - name: Set half VG size for logical volumes
   ansible.builtin.set_fact:
-    half_vg_size: "{{ (vg_total_size / 2) | round(0, 'floor') }}"
+    half_vg_size: "{{ (vg_total_size | float / 2) | round(0, 'floor') }}"
 
 - name: Debug half VG size
   ansible.builtin.debug:
