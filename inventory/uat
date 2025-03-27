@@ -4,7 +4,7 @@
 172.31.13.166 ansible_ssh_user=ec2-user
 
 [db]
-172.31.9.84 ansible_ssh_user=ec2-user
+172.31.6.255 ansible_ssh_user=ec2-user
 
 [all:vars]
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
