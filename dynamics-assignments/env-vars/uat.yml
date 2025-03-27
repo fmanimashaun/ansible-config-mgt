@@ -9,3 +9,5 @@ mysql_users:
   host: "172.31.%"
   password: "Password@1"
   priv: "tooling.*:ALL"
+
+tooling_repo: "https://github.com/fmanimashaun/tooling.git"

@@ -1,0 +1,24 @@
+---
+- name: Clone the tooling repository using environment variable
+  become: true
+  ansible.builtin.git:
+    repo: "{{ tooling_repo }}"
+    dest: /tmp/tooling
+    version: main
+    force: true
+
+- name: Import tooling database dump using MySQL root credentials
+  become: true
+  community.mysql.mysql_db:
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+    login_unix_socket: /var/lib/mysql/mysql.sock
+    name: tooling
+    state: import
+    target: /tmp/tooling/tooling-db.sql
+
+- name: Remove the cloned tooling repository from /tmp
+  become: true
+  ansible.builtin.file:
+    path: /tmp/tooling
+    state: absent
