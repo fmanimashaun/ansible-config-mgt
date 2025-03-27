@@ -36,7 +36,7 @@
 
 # Create volume group 'dbdata-vg'
 - name: Create volume group 'dbdata-vg'
-  ansible.posix.lvg:
+  community.general.lvg:
     vg: dbdata-vg
     pvs:
       - /dev/xvdb1
@@ -70,16 +70,16 @@
   ansible.builtin.debug:
     msg: "Half of VG size: {{ half_vg_size }}G"
 
-# Create logical volume for database and log data using dynamically calculated size
+# Create logical volumes for database data and logs using dynamically calculated size
 - name: Create logical volumes for database data and logs using dynamically calculated size
-  ansible.posix.lvol:
+  community.general.lvol:
     vg: dbdata-vg
     lv: "{{ item }}"
     size: "{{ half_vg_size }}g"
+    state: present
   loop:
     - db-lv
     - log-lv
-
 
 # Create ext4 filesystem on the new logical volumes
 - name: Create ext4 filesystem on the new logical volumes
