@@ -1,4 +1,10 @@
 ---
+- name: Install git
+  become: true
+  ansible.builtin.dnf:
+    name: git
+    state: present
+
 - name: Clone the tooling repository using environment variable
   become: true
   ansible.builtin.git:
