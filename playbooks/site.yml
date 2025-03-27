@@ -6,24 +6,24 @@
       ansible.builtin.debug:
         msg: "The playbook directory is: {{ playbook_dir }}"
 
-- name: Load dynamic variables
-  hosts: all
-  become: true
-  tasks:
-    - name: Include environment variables from dynamic assignments
-      ansible.builtin.include_tasks: "../dynamics-assignments/env-vars.yml"
-  tags:
-    - always
+# - name: Load dynamic variables
+#   hosts: all
+#   become: true
+#   tasks:
+#     - name: Include environment variables from dynamic assignments
+#       ansible.builtin.include_tasks: "../dynamics-assignments/env-vars.yml"
+#   tags:
+#     - always
 
 # Set up MySQL on database servers
-- name: Set up MySQL
-  hosts: db
-  become: true
-  vars_files:
-    - ../env-vars/dev.yml
-  roles:
-    - dbserver
+# - name: Set up MySQL
+#   hosts: db
+#   become: true
+#   vars_files:
+#     - ../env-vars/dev.yml
+#   roles:
+#     - dbserver
 
 # Set up Apache and PHP on web servers
-- name: Import UAT webservers play
-  ansible.builtin.import_playbook: "../static-assignments/uat-webserver.yml"
+# - name: Import UAT webservers play
+#   ansible.builtin.import_playbook: "../static-assignments/uat-webserver.yml"
