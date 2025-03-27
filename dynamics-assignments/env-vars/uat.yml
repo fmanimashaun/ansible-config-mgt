@@ -1,8 +1,4 @@
-# MySQL configuration for the development environment
-mysql_root_username: "root"
-mysql_root_password: "Password@1"
-
-# Define databases and users to be created for the dev environment
+# Define databases and users to be created for the uat environment
 mysql_databases:
 - name: "tooling"
   encoding: "utf8"
@@ -10,6 +6,6 @@ mysql_databases:
 
 mysql_users:
 - name: "webaccess"
-  host: "%"
+  host: "172.31.%"
   password: "Password@1"
   priv: "tooling.*:ALL"

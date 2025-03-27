@@ -1,11 +1,4 @@
 ---
-# - name: Show playbook directory
-#   hosts: all
-#   tasks:
-#     - name: Show playbook directory
-#       ansible.builtin.debug:
-#         msg: "The playbook directory is: {{ playbook_dir }}"
-
 - name: Load dynamic variables
   hosts: all
   become: true
@@ -19,8 +12,6 @@
 - name: Set up MySQL
   hosts: db
   become: true
-  vars_files:
-    - ../env-vars/dev.yml
   roles:
     - dbserver
 
