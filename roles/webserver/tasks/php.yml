@@ -1,0 +1,22 @@
+---
+- name: Install PHP and required extensions
+  become: true
+  ansible.builtin.dnf:
+    name: "{{ ['php'] + php_extensions }}"
+    state: present
+  when: php_version is defined
+
+- name: Install PHP-FPM
+  become: true
+  ansible.builtin.dnf:
+    name: php-fpm
+    state: present
+  when: php_version is defined
+
+- name: Start and enable PHP-FPM
+  become: true
+  ansible.builtin.systemd:
+    name: php-fpm
+    state: started
+    enabled: true
+  when: php_version is defined

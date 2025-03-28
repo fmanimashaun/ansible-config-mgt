@@ -11,3 +11,21 @@ mysql_users:
   priv: "tooling.*:ALL"
 
 tooling_repo: "https://github.com/fmanimashaun/tooling.git"
+
+# Define the PHP version and repositories
+epel_repo_url: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm"
+remi_repo_url: "https://rpms.remirepo.net/enterprise/remi-release-9.rpm"
+php_version: "8.3"
+
+# Define the PHP extensions as a list
+php_extensions:
+  - php-opcache
+  - php-gd
+  - php-curl
+  - php-mysqlnd
+  - php-xml
+  - php-json
+  - php-mbstring
+  - php-intl
+  - php-soap
+  - php-zip

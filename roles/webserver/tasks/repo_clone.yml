@@ -1,0 +1,25 @@
+---
+- name: Clone the tooling repository using environment variable
+  become: true
+  ansible.builtin.git:
+    repo: "{{ tooling_repo }}"
+    dest: /var/www/html/
+    version: main
+    force: true
+  notify: Restart Apache
+
+- name: Copy HTML content to one level up
+  become: true
+  ansible.builtin.copy:
+    src: /var/www/html/html/
+    dest: /var/www/html/
+    remote_src: true
+    mode: "0755"
+  notify: Restart Apache
+
+- name: Remove redundant nested html directory
+  become: true
+  ansible.builtin.file:
+    path: /var/www/html/html
+    state: absent
+  notify: Restart Apache

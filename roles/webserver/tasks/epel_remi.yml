@@ -1,0 +1,20 @@
+---
+- name: Install repositories and switch PHP module stream
+  become: true
+  when: ([ epel_repo_url, remi_repo_url, php_version ] | select('defined') | list | length) == 3
+  block:
+    - name: Install EPEL repository
+      ansible.builtin.dnf:
+        name: "{{ epel_repo_url }}"
+        state: present
+
+    - name: Install Remi repository
+      ansible.builtin.dnf:
+        name: "{{ remi_repo_url }}"
+        state: present
+
+    - name: Switch to PHP module stream from Remi
+      ansible.builtin.dnf:
+        module_enable:
+          - "php:remi-{{ php_version }}"
+        state: present

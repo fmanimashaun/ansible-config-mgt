@@ -1,0 +1,26 @@
+---
+- name: Install Apache (httpd)
+  become: true
+  ansible.builtin.dnf:
+    name: httpd
+    state: present
+
+- name: Install git
+  become: true
+  ansible.builtin.dnf:
+    name: git
+    state: present
+
+- name: Install NFS client utilities (nfs-utils and nfs4-acl-tools)
+  become: true
+  ansible.builtin.dnf:
+    name:
+      - nfs-utils
+      - nfs4-acl-tools
+    state: present
+
+- name: Install official MySQL client
+  become: true
+  ansible.builtin.dnf:
+    name: mysql-community-client
+    state: present

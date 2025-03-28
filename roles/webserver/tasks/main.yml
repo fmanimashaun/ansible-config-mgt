@@ -1,54 +1,20 @@
 ---
-- name: Install Apache (httpd)
-  become: true
-  ansible.builtin.dnf:
-    name: httpd
-    state: present
+# Include repository and module stream configuration tasks
+- name: Include EPEL and Remi repository tasks
+  ansible.builtin.include_tasks: epel_remi.yml
 
-- name: Install PHP
-  become: true
-  ansible.builtin.dnf:
-    name: php
-    state: present
+# Include PHP installation tasks
+- name: Include PHP installation tasks
+  ansible.builtin.include_tasks: php.yml
 
-- name: Install git
-  become: true
-  ansible.builtin.dnf:
-    name: git
-    state: present
+# Include Apache, git, NFS utilities, and MySQL client installation tasks
+- name: Include Apache, git, NFS, and MySQL client installation tasks
+  ansible.builtin.include_tasks: apache_git_nfs_mysql.yml
 
-# New task: Install MySQL client
-- name: Install MySQL client
-  become: true
-  ansible.builtin.dnf:
-    name: mariadb  # or mysql if you prefer the official package
-    state: present
+# Include SELinux configuration tasks (if applicable)
+- name: Include SELinux configuration tasks for Apache and PHP
+  ansible.builtin.include_tasks: selinux.yml
 
-- name: Clone the repository
-  become: true
-  ansible.builtin.git:
-    repo: "{{ tooling_repo }}"
-    dest: /var/www/html/
-    force: true
-    version: main
-
-- name: Copy HTML content to one level up
-  become: true
-  ansible.builtin.copy:
-    src: /var/www/html/html/
-    dest: /var/www/html/
-    remote_src: true
-    mode: "0755"
-
-- name: Remove redundant nested html directory
-  become: true
-  ansible.builtin.file:
-    path: /var/www/html/html
-    state: absent
-
-- name: Restart and enable Apache
-  become: true
-  ansible.builtin.systemd:
-    name: httpd
-    state: restarted
-    enabled: true
+# Include repository cloning and HTML management tasks
+- name: Include repository cloning and HTML management tasks
+  ansible.builtin.include_tasks: repo_clone.yml

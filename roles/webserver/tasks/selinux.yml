@@ -1,0 +1,22 @@
+---
+- name: Configure SELinux for Apache and PHP (if SELinux is enabled)
+  become: true
+  when: ansible_selinux.status == "enabled"
+  block:
+    - name: Allow Apache to execute memory operations (OpCache)
+      ansible.posix.seboolean:
+        name: httpd_execmem
+        state: true
+        persistent: true
+
+    - name: Allow Apache to make network connections
+      ansible.posix.seboolean:
+        name: httpd_can_network_connect
+        state: true
+        persistent: true
+
+    - name: Allow Apache to connect via NFS
+      ansible.posix.seboolean:
+        name: httpd_use_nfs
+        state: true
+        persistent: true
