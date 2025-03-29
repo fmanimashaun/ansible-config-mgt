@@ -1,4 +1,11 @@
 ---
+# create the backup marker
+- name: Check if backup marker exists in /var/log
+  become: true
+  ansible.builtin.stat:
+    path: /var/log/backup_done_marker
+  register: backup_marker
+
 # Install the LVM2 package
 - name: Install LVM2 package
   ansible.builtin.package:
