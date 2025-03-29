@@ -110,7 +110,7 @@
     src: /var/log/
     dest: /home/recovery/logs/
     archive: yes
-    delegate_to: localhost
+  delegate_to: localhost
   when: not backup_marker.stat.exists
 
 # Mount the logical volume for database and log data persistently to /db and /var/log respectively
@@ -132,7 +132,7 @@
     src: /home/recovery/logs/
     dest: /var/log/
     archive: yes
-    delegate_to: localhost
+  delegate_to: localhost
   when: not backup_marker.stat.exists
 
 # create a marker file to indicate that the backup/restore process has completed
