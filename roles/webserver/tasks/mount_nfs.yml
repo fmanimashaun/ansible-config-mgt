@@ -1,0 +1,17 @@
+---
+- name: Ensure local mount point exists for web content
+  become: true
+  ansible.builtin.file:
+    path: /var/www
+    state: directory
+
+- name: Mount NFS share for web content persistently
+  become: true
+  ansible.posix.mount:
+    path: /var/www
+    src: "{{ nfs_server_ip }}:/mnt/apps"
+    fstype: nfs
+    opts: defaults,nosuid,rw
+    state: mounted
+    dump: 0
+    passno: 0

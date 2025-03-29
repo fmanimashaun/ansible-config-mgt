@@ -1,19 +1,26 @@
 ---
-# Install the LVM2 package
-- name: Install LVM2 package
+# Install the LVM2, git nano package
+- name: Install LVM2, git, nano package
   ansible.builtin.package:
-    name: lvm2
+    name:
+      - lvm2
+      - git
+      - nano
     state: present
 
 # Ensure necessary directories exist before any operations
-- name: Create required directories
+- name: Ensure required directories exist with correct ownership and permissions
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
-    mode: '0755'
+    owner: nobody
+    group: nobody
+    mode: '0777'
+    recurse: true
   loop:
-    - /db
-    - /home/recovery/logs
+    - /mnt/apps
+    - /mnt/logs
+    - /mnt/opt
 
 # Partition EBS volumes with parted
 - name: Partition EBS volumes with parted
@@ -40,10 +47,10 @@
   args:
     creates: "{{ item }}"
 
-# Create volume group 'dbdata-vg'
-- name: Create volume group 'dbdata-vg'
+# Create volume group 'webdata-vg'
+- name: Create volume group 'webdata-vg'
   community.general.lvg:
-    vg: dbdata-vg
+    vg: webdata-vg
     pvs:
       - /dev/xvdb1
       - /dev/xvdc1
@@ -53,9 +60,9 @@
   ansible.builtin.pause:
     seconds: 5
 
-# Get the total size of volume group 'dbdata-vg' in gigabytes
-- name: Get total size of volume group dbdata-vg
-  ansible.builtin.command: "vgs --noheadings --units g --nosuffix -o vg_size dbdata-vg"
+# Get the total size of volume group 'webdata-vg' in gigabytes
+- name: Get total size of volume group webdata-vg
+  ansible.builtin.command: "vgs --noheadings --units g --nosuffix -o vg_size webdata-vg"
   register: vg_size_cmd
   changed_when: false
 
@@ -68,45 +75,37 @@
     msg: "Volume group total size: {{ vg_total_size }}G"
 
 # Calculate half the VG total size for the logical volumes
-- name: Set half VG size for logical volumes
+- name: Set one-third VG size for logical volumes
   ansible.builtin.set_fact:
-    half_vg_size: "{{ (vg_total_size | float / 2) | round(0, 'floor') }}"
+    one_third_vg_size: "{{ (vg_total_size | float / 3) | round(0, 'floor') }}"
 
-- name: Debug half VG size
+- name: Debug one-third VG size
   ansible.builtin.debug:
-    msg: "Half of VG size: {{ half_vg_size }}G"
+    msg: "one-third of VG size: {{ one_third_vg_size }}G"
 
 # Create logical volumes for database data and logs using dynamically calculated size
 - name: Create logical volumes for database data and logs using dynamically calculated size
   community.general.lvol:
-    vg: dbdata-vg
+    vg: webdata-vg
     lv: "{{ item }}"
-    size: "{{ half_vg_size }}g"
+    size: "{{ one_third_vg_size }}g"
     state: present
   loop:
-    - db-lv
-    - log-lv
+    - apps-lv
+    - logs-lv
+    - opt-lv
 
 # Create ext4 filesystem on the new logical volumes
 - name: Create ext4 filesystem on the new logical volumes
   community.general.filesystem:
-    fstype: ext4
-    dev: "/dev/dbdata-vg/{{ item }}"
+    fstype: xfs
+    dev: "/dev/webdata-vg/{{ item }}"
   loop:
-    - db-lv
-    - log-lv
+    - apps-lv
+    - logs-lv
+    - opt-lv
 
-# Backup current /var/log to /home/recovery/logs using synchronize module
-- name: Backup current /var/log to /home/recovery/logs
-  ansible.posix.synchronize:
-    src: /var/log/
-    dest: /home/recovery/logs/
-    mode: pull
-    recursive: true
-    archive: true
-  changed_when: false
-
-# Mount the logical volume for database and log data persistently to /db and /var/log respectively
+# Mount the logical volume to the specified directories
 - name: Mount logical volumes persistently
   ansible.posix.mount:
     path: "{{ item.path }}"
@@ -115,21 +114,6 @@
     opts: defaults
     state: mounted
   loop:
-    - { path: "/db", src: "/dev/dbdata-vg/db-lv" }
-    - { path: "/var/log", src: "/dev/dbdata-vg/log-lv" }
-
-# Restore /var/log from backup using synchronize module
-- name: Restore /var/log from backup
-  ansible.posix.synchronize:
-    src: /home/recovery/logs/
-    dest: /var/log/
-    mode: push
-    recursive: true
-    archive: true
-  changed_when: false
-
-# Delete backup directory /home/recovery/logs after restoration
-- name: Delete backup directory /home/recovery/logs
-  ansible.builtin.file:
-    path: /home/recovery/logs
-    state: absent
+    - { path: "/mnt/apps", src: "/dev/webdata-vg/apps-lv" }
+    - { path: "/mnt/log", src: "/dev/webdata-vg/logs-lv" }
+    - { path: "/mnt/opt", src: "/dev/webdata-vg/opt-lv" }

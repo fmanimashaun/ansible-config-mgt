@@ -1,0 +1,9 @@
+---
+# Configure NFS exports using a template
+- name: Configure NFS exports
+  become: true
+  ansible.builtin.template:
+    src: exports.j2
+    dest: "{{ nfs_exports_file }}"
+    mode: "0644"
+  notify: Reload NFS exports

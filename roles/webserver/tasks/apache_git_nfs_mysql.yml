@@ -8,7 +8,7 @@
 - name: Install git and nano
   become: true
   ansible.builtin.dnf:
-    name: 
+    name:
       - git
       - nano
     state: present

@@ -1,13 +1,16 @@
 [uat_web_servers]
-172.31.9.120 ansible_ssh_user=ec2-user
-172.31.0.175 ansible_ssh_user=ec2-user
-172.31.13.166 ansible_ssh_user=ec2-user
+172.31.15.254 ansible_ssh_user=ec2-user
+172.31.1.205 ansible_ssh_user=ec2-user
+172.31.14.95 ansible_ssh_user=ec2-user
 
-[db]
+[uat_db]
 172.31.6.255 ansible_ssh_user=ec2-user
+
+[uat_nfs]
+172.31.8.245 ansible_ssh_user=ec2-user
+
+[uat_nfs:vars]
+nfs_server_ip=172.31.8.245
 
 [all:vars]
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
-
-[db:vars]
-env_vars_file=../env-vars/uat.yml

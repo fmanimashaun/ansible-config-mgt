@@ -1,0 +1,4 @@
+---
+# define default variables for the NFS server role
+nfs_exports_file: /etc/exports
+nfs_exports_options: "rw,sync,no_root_squash"
