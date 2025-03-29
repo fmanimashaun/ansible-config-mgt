@@ -10,14 +10,14 @@
 
 # Set up MySQL on database servers
 - name: Set up MySQL
-  hosts: db
+  hosts: uat_db
   become: true
   roles:
     - dbserver
 
 # Set up MySQL on database servers
 - name: Set up NFS server
-  hosts: nfs
+  hosts: uat_nfs
   become: true
   roles:
     - nfs-server
