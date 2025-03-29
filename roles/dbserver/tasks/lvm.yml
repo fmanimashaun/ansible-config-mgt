@@ -105,12 +105,12 @@
 
 # Backup /var/log only if it is not mounted yet (i.e. this is the first run)
 - name: Backup /var/log to /home/recovery/logs using synchronize
+  delegate_to:  "{{ inventory_hostname }}"
   become: true
   ansible.posix.synchronize:
     src: /var/log/
     dest: /home/recovery/logs/
     archive: yes
-  delegate_to: localhost
   when: not backup_marker.stat.exists
 
 # Mount the logical volume for database and log data persistently to /db and /var/log respectively
@@ -127,12 +127,12 @@
 
 # Restore /var/log from backup, but only if the backup task actually ran
 - name: Restore /var/log from backup using synchronize
+  delegate_to:  "{{ inventory_hostname }}"
   become: true
   ansible.posix.synchronize:
     src: /home/recovery/logs/
     dest: /var/log/
     archive: yes
-  delegate_to: localhost
   when: not backup_marker.stat.exists
 
 # create a marker file to indicate that the backup/restore process has completed
