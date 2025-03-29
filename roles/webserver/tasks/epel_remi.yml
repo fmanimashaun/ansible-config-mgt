@@ -1,22 +1,22 @@
 ---
-# check if variables are defined
-- name: Debug environment variables
-  become: true
-  ansible.builtin.debug:
-    msg: >
-      epel_repo_url={{ epel_repo_url }},
-      remi_repo_url={{ remi_repo_url }},
-      php_version={{ php_version }}
-
-# install EPEL and Remi repositories and switch PHP module stream
 - name: Install repositories and switch PHP module stream
   become: true
-  when: ([ epel_repo_url, remi_repo_url, php_version ] | select('defined') | list | length) == 3
+  when: ([ epel_repo_url, epel_gpg_key_url, remi_repo_url, remi_gpg_key_url, php_version ] | select('defined') | list | length) == 3
   block:
+    - name: Import EPEL GPG key
+      ansible.builtin.rpm_key:
+        state: present
+        key: "{{ epel_gpg_key_url }}"
+
     - name: Install EPEL repository
       ansible.builtin.dnf:
         name: "{{ epel_repo_url }}"
         state: present
+
+    - name: Import Remi GPG key
+      ansible.builtin.rpm_key:
+        state: present
+        key: "{{ remi_gpg_key_url }}"
 
     - name: Install Remi repository
       ansible.builtin.dnf:
