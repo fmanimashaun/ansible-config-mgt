@@ -1,4 +1,5 @@
 ---
+# Install necessary packages for web server, git, NFS, and MySQL
 - name: Install apache (httpd), git, nano, nfs-utils, nfs4-acl-tools, and mariadb
   become: true
   ansible.builtin.dnf:
@@ -10,3 +11,11 @@
       - nfs4-acl-tools
       - mariadb
     state: present
+
+# Ensure Apache service is enabled and started
+- name: Start and enable Apache
+  become: true
+  ansible.builtin.systemd:
+    name: httpd
+    state: started
+    enabled: true
