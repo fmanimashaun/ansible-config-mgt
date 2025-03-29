@@ -96,15 +96,16 @@
     - db-lv
     - log-lv
 
-# Backup current /var/log to /home/recovery/logs using synchronize module
-- name: Backup current /var/log to /home/recovery/logs
+# Backup /var/log only if it is not mounted yet (i.e. this is the first run)
+- name: Backup /var/log to /home/recovery/logs using synchronize
+  become: true
   ansible.posix.synchronize:
     src: /var/log/
     dest: /home/recovery/logs/
     mode: pull
-    recursive: true
-    archive: true
-  changed_when: false
+    recursive: yes
+    archive: yes
+  when: not backup_marker.stat.exists
 
 # Mount the logical volume for database and log data persistently to /db and /var/log respectively
 - name: Mount logical volumes persistently
@@ -118,18 +119,20 @@
     - { path: "/db", src: "/dev/dbdata-vg/db-lv" }
     - { path: "/var/log", src: "/dev/dbdata-vg/log-lv" }
 
-# Restore /var/log from backup using synchronize module
-- name: Restore /var/log from backup
+# Restore /var/log from backup, but only if the backup task actually ran
+- name: Restore /var/log from backup using synchronize
+  become: true
   ansible.posix.synchronize:
     src: /home/recovery/logs/
     dest: /var/log/
     mode: push
-    recursive: true
-    archive: true
-  changed_when: false
+    recursive: yes
+    archive: yes
+  when: not backup_marker.stat.exists
 
-# Delete backup directory /home/recovery/logs after restoration
-- name: Delete backup directory /home/recovery/logs
+# create a marker file to indicate that the backup/restore process has completed
+- name: Create marker file to indicate backup/restore completed
+  become: true
   ansible.builtin.file:
-    path: /home/recovery/logs
-    state: absent
+    path: /var/log/backup_done_marker
+    state: touch
