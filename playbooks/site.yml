@@ -15,6 +15,13 @@
   roles:
     - dbserver
 
+# Set up MySQL on database servers
+- name: Set up NFS server
+  hosts: nfs
+  become: true
+  roles:
+    - nfs-server
+
 # Set up Apache and PHP on web servers
 - name: Import UAT webservers play
   ansible.builtin.import_playbook: "../static-assignments/uat-webserver.yml"

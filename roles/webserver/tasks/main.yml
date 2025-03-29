@@ -1,4 +1,8 @@
 ---
+# Mount to NFS server application directory
+- name: Mount to NFS server application directory
+  ansible.builtin.include_tasks: mount_nfs.yml
+
 # Include repository and module stream configuration tasks
 - name: Include EPEL and Remi repository tasks
   ansible.builtin.include_tasks: epel_remi.yml
@@ -14,7 +18,3 @@
 # Include SELinux configuration tasks (if applicable)
 - name: Include SELinux configuration tasks for Apache and PHP
   ansible.builtin.include_tasks: selinux.yml
-
-# Include repository cloning and HTML management tasks
-- name: Include repository cloning and HTML management tasks
-  ansible.builtin.include_tasks: repo_clone.yml

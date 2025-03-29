@@ -3,23 +3,20 @@
   become: true
   ansible.builtin.git:
     repo: "{{ tooling_repo }}"
-    dest: /var/www/html/
+    dest: /tmp/tooling
     version: main
     force: true
-  notify: Restart Apache
 
-- name: Copy HTML content to one level up
+- name: Copy html directory from cloned repository to /mnt/apps
   become: true
   ansible.builtin.copy:
-    src: /var/www/html/html/
-    dest: /var/www/html/
+    src: /tmp/tooling/html/
+    dest: /mnt/apps/html/
     remote_src: true
     mode: "0755"
-  notify: Restart Apache
 
-- name: Remove redundant nested html directory
+- name: Remove cloned tooling repository from /tmp
   become: true
   ansible.builtin.file:
-    path: /var/www/html/html
+    path: /tmp/tooling
     state: absent
-  notify: Restart Apache

@@ -1,0 +1,19 @@
+---
+# install nfs-server
+- name: Install nfs-utils package
+  ansible.builtin.dnf:
+    name: nfs-utils
+    state: present
+
+# Ensure NFS service is enabled and started
+- name: Ensure NFS service is enabled and started
+  ansible.builtin.systemd:
+    name: nfs-server
+    enabled: true
+    state: started
+
+# Restart the nfs-server service to apply changes
+- name: Restart nfs-server to apply changes
+  ansible.builtin.systemd:
+    name: nfs-server
+    state: restarted

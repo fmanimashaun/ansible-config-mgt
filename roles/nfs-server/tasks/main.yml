@@ -1,0 +1,16 @@
+---
+# configure the logical volumes and filesystems
+- name: Include LVM configuration tasks
+  ansible.builtin.include_tasks: lvm.yml
+
+# Install the NFS server
+- name: Include NFS server installation tasks
+  ansible.builtin.include_tasks: install_nfs.yml
+
+# configure the NFS server
+- name: Include NFS exports configuration tasks
+  ansible.builtin.include_tasks: export.yml
+
+# clone the shared application repository
+- name: Include repository cloning tasks for web content
+  ansible.builtin.include_tasks: repo_clone.yml
