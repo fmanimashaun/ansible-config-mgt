@@ -21,8 +21,8 @@
       - nfs4-acl-tools
     state: present
 
-- name: Install MySQL client
+- name: Install MySQL client (MariaDB)
   become: true
   ansible.builtin.dnf:
-    name: mysql
+    name: mariadb
     state: present
