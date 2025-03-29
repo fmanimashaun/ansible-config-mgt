@@ -1,28 +1,12 @@
 ---
-- name: Install Apache (httpd)
-  become: true
-  ansible.builtin.dnf:
-    name: httpd
-    state: present
-
-- name: Install git and nano
+- name: Install apache (httpd), git, nano, nfs-utils, nfs4-acl-tools, and mariadb
   become: true
   ansible.builtin.dnf:
     name:
+      - httpd
       - git
       - nano
-    state: present
-
-- name: Install NFS client utilities (nfs-utils and nfs4-acl-tools)
-  become: true
-  ansible.builtin.dnf:
-    name:
       - nfs-utils
       - nfs4-acl-tools
-    state: present
-
-- name: Install MySQL client (MariaDB)
-  become: true
-  ansible.builtin.dnf:
-    name: mariadb
+      - mariadb
     state: present
