@@ -109,8 +109,6 @@
   ansible.posix.synchronize:
     src: /var/log/
     dest: /home/recovery/logs/
-    mode: pull
-    recursive: yes
     archive: yes
   when: not backup_marker.stat.exists
 
@@ -132,8 +130,6 @@
   ansible.posix.synchronize:
     src: /home/recovery/logs/
     dest: /var/log/
-    mode: push
-    recursive: yes
     archive: yes
   when: not backup_marker.stat.exists
 
