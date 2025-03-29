@@ -1,4 +1,14 @@
 ---
+# check if variables are defined
+- name: Debug environment variables
+  become: true
+  ansible.builtin.debug:
+    msg: >
+      epel_repo_url={{ epel_repo_url }},
+      remi_repo_url={{ remi_repo_url }},
+      php_version={{ php_version }}
+
+# install EPEL and Remi repositories and switch PHP module stream
 - name: Install repositories and switch PHP module stream
   become: true
   when: ([ epel_repo_url, remi_repo_url, php_version ] | select('defined') | list | length) == 3
