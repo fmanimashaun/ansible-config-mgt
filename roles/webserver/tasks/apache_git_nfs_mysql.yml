@@ -21,7 +21,7 @@
       - nfs4-acl-tools
     state: present
 
-- name: Install official MySQL client
+- name: Install MySQL client
   become: true
   ansible.builtin.dnf:
     name: mysql
