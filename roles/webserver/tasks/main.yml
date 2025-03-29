@@ -1,4 +1,8 @@
 ---
+# Include Apache, git, NFS utilities, and MySQL client installation tasks
+- name: Include Apache, git, NFS, and MySQL client installation tasks
+  ansible.builtin.include_tasks: apache_git_nfs_mysql.yml
+
 # Mount to NFS server application directory
 - name: Mount to NFS server application directory
   ansible.builtin.include_tasks: mount_nfs.yml
@@ -10,10 +14,6 @@
 # Include PHP installation tasks
 - name: Include PHP installation tasks
   ansible.builtin.include_tasks: php.yml
-
-# Include Apache, git, NFS utilities, and MySQL client installation tasks
-- name: Include Apache, git, NFS, and MySQL client installation tasks
-  ansible.builtin.include_tasks: apache_git_nfs_mysql.yml
 
 # Include SELinux configuration tasks (if applicable)
 - name: Include SELinux configuration tasks for Apache and PHP
