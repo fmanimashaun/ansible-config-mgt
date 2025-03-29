@@ -11,7 +11,7 @@
     path: /var/www
     src: "{{ nfs_server_ip }}:/mnt/apps"
     fstype: nfs
-    opts: defaults,nosuid,rw
+    opts: "rw,nosuid"
     state: mounted
     dump: 0
     passno: 0
