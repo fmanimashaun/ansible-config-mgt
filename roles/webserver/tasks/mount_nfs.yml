@@ -1,9 +1,13 @@
 ---
-- name: Ensure local mount point exists for web content
+- name: Ensure local mount point exists for web content 
   become: true
   ansible.builtin.file:
     path: /var/www
     state: directory
+    owner: nobody
+    group: nobody
+    mode: '0777'
+    recurse: true
 
 - name: Mount NFS share for web content persistently
   become: true
