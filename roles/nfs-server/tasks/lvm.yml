@@ -110,7 +110,7 @@
   ansible.posix.mount:
     path: "{{ item.path }}"
     src: "{{ item.src }}"
-    fstype: ext4
+    fstype: xfs
     opts: defaults
     state: mounted
   loop:
