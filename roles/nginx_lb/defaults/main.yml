@@ -1,0 +1,4 @@
+---
+# Enable Nginx load balancer
+enable_nginx_lb: false
+load_balancer_is_required: false
