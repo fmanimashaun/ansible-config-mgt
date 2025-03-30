@@ -25,3 +25,10 @@
 # Set up Apache and PHP on web servers
 - name: Import webservers play
   ansible.builtin.import_playbook: "../static-assignments/uat-webserver.yml"
+
+# Configure load balancers
+- name: Configure load balancer
+  hosts: lb_servers
+  roles:
+    - { role: nginx_lb, when: load_balancer_is_required and nginx_lb_enabled }
+    - { role: apache_lb, when: load_balancer_is_required and apache_lb_enabled }
