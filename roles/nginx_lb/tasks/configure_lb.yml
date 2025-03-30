@@ -1,0 +1,66 @@
+---
+# Install Nginx
+- name: Install nginx
+  become: true
+  ansible.builtin.dnf:
+    name: nginx
+    state: present
+  when:
+    - nginx_lb_enabled
+    - load_balancer_is_required
+
+# Deploy load balancer config
+- name: Deploy Nginx load balancer configuration
+  become: true
+  ansible.builtin.template:
+    src: load_balancer.conf.j2
+    dest: /etc/nginx/conf.d/load_balancer.conf
+    mode: '0644'
+  notify: Reload Nginx
+  when:
+    - nginx_lb_enabled
+    - load_balancer_is_required
+
+# Remove default Nginx conf
+- name: Remove default Nginx site configuration
+  become: true
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: Reload Nginx
+
+# Test the new configuration
+- name: Test Nginx configuration
+  become: true
+  ansible.builtin.command: nginx -t
+  register: nginx_test
+  changed_when: false
+
+# Start and enable Nginx if enabled
+- name: Ensure Nginx is started and enabled if load balancing is enabled
+  become: true
+  ansible.builtin.systemd:
+    name: nginx
+    state: started
+    enabled: true
+  when:
+    - nginx_lb_enabled
+    - load_balancer_is_required
+
+# Stop Nginx if not enabled
+- name: Ensure Nginx is stopped if load balancing is required but not enabled
+  become: true
+  ansible.builtin.systemd:
+    name: nginx
+    state: stopped
+  when:
+    - not nginx_lb_enabled
+    - load_balancer_is_required
+
+# Stop Nginx if load balancer not required
+- name: Ensure Nginx is stopped if load balancing is not required
+  become: true
+  ansible.builtin.systemd:
+    name: nginx
+    state: stopped
+  when: not load_balancer_is_required

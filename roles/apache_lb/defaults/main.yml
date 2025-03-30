@@ -1,4 +1,4 @@
 ---
 # Enable Apache load balancer
-apache_lb_enable: false
+apache_lb_enabled: false
 apache_lb_required: "{{ load_balancer_is_required | default(false) }}"

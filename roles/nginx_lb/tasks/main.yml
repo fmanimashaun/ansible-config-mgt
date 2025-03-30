@@ -1,19 +1,8 @@
 ---
-# Start Nginx if enabled
-- name: Ensure Nginx is started if enabled
-  ansible.builtin.service:
-    name: nginx
-    state: started
-    enabled: true
-  when:
-    - nginx_lb_enable
-    - load_balancer_is_required
+# Update the /etc/hosts file
+- name: Update the /etc/hosts file
+  ansible.builtin.include_tasks: update_hosts.yml
 
-# Stop Nginx if not enabled
-- name: Stop Nginx if not required
-  ansible.builtin.service:
-    name: nginx
-    state: stopped
-  when:
-    - not nginx_lb_enable
-    - load_balancer_is_required
+# Config Nginx Load Balancer
+- name: Config Nginx Load Balancer
+  ansible.builtin.include_tasks: configure_lb.yml
