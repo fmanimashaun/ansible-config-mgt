@@ -1,6 +1,6 @@
 ---
-# This playbook is for deploying web servers in the UAT environment.
-- name: UAT webservers
-  hosts: uat_web_servers
+# This playbook is for deploying web servers
+- name: Web servers
+  hosts: web_servers
   roles:
     - webserver

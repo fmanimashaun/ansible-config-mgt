@@ -1,3 +1,19 @@
-#SPDX-License-Identifier: MIT-0
 ---
-# tasks file for nginx_lb
+# Start Nginx if enabled
+- name: Ensure Nginx is started if enabled
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
+  when:
+    - nginx_lb_enable
+    - load_balancer_is_required
+
+# Stop Nginx if not enabled
+- name: Stop Nginx if not required
+  ansible.builtin.service:
+    name: nginx
+    state: stopped
+  when:
+    - not nginx_lb_enable
+    - load_balancer_is_required

@@ -1,12 +1,12 @@
-[uat_web_servers]
-172.31.15.254 ansible_ssh_user=ec2-user
-172.31.1.205 ansible_ssh_user=ec2-user
-172.31.14.95 ansible_ssh_user=ec2-user
+[web_servers]
+172.31.15.254 ansible_ssh_user=ec2-user backend_name=web1
+172.31.1.205 ansible_ssh_user=ec2-user backend_name=web2
+172.31.14.95 ansible_ssh_user=ec2-user backend_name=web3
 
-[uat_db]
+[db_server]
 172.31.6.255 ansible_ssh_user=ec2-user
 
-[uat_nfs]
+[nfs_server]
 172.31.8.245 ansible_ssh_user=ec2-user
 
 [all:vars]
