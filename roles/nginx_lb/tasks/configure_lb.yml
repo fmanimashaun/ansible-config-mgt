@@ -2,9 +2,10 @@
 # Install Nginx
 - name: Install nginx
   become: true
-  ansible.builtin.dnf:
+  ansible.builtin.apt:
     name: nginx
     state: present
+    update_cache: true
   when:
     - nginx_lb_enabled
     - load_balancer_is_required
