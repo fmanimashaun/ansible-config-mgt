@@ -1,7 +1,7 @@
 [web_servers]
-172.31.15.254 ansible_ssh_user=ec2-user backend_name=web1
-172.31.1.205 ansible_ssh_user=ec2-user backend_name=web2
-172.31.14.95 ansible_ssh_user=ec2-user backend_name=web3
+172.31.15.254 ansible_ssh_user=ec2-user ansible_host=172.31.15.254 backend_name=web1
+172.31.1.205 ansible_ssh_user=ec2-user ansible_host=172.31.1.205 backend_name=web2
+172.31.14.95 ansible_ssh_user=ec2-user ansible_host=172.31.14.95 backend_name=web3
 
 [db_server]
 172.31.6.255 ansible_ssh_user=ec2-user
