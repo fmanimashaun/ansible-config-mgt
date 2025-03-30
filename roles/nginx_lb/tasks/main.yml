@@ -2,7 +2,9 @@
 # Update the /etc/hosts file
 - name: Update the /etc/hosts file
   ansible.builtin.include_tasks: update_hosts.yml
+  when: lb_type == 'nginx'
 
 # Config Nginx Load Balancer
 - name: Config Nginx Load Balancer
   ansible.builtin.include_tasks: configure_lb.yml
+  when: lb_type == 'nginx'

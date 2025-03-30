@@ -9,6 +9,10 @@
 [nfs_server]
 172.31.8.245 ansible_ssh_user=ec2-user
 
+[lb_servers]
+172.31.3.63 ansible_ssh_user=ubuntu lb_type=nginx
+172.31.10.4 ansible_ssh_user=ubuntu lb_type=apache
+
 [all:vars]
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
 nfs_server_ip=172.31.8.245
