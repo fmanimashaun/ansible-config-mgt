@@ -10,18 +10,25 @@
 
 # Set up MySQL on database servers
 - name: Set up MySQL
-  hosts: uat_db
+  hosts: db_server
   become: true
   roles:
     - dbserver
 
 # Set up MySQL on database servers
 - name: Set up NFS server
-  hosts: uat_nfs
+  hosts: nfs_server
   become: true
   roles:
     - nfs-server
 
 # Set up Apache and PHP on web servers
-- name: Import UAT webservers play
+- name: Import webservers play
   ansible.builtin.import_playbook: "../static-assignments/uat-webserver.yml"
+
+# Configure load balancers
+- name: Configure load balancer
+  hosts: lb_servers
+  roles:
+    - { role: nginx_lb, when: load_balancer_is_required and nginx_lb_enabled }
+    - { role: apache_lb, when: load_balancer_is_required and apache_lb_enabled }

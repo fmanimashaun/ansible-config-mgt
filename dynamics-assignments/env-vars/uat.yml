@@ -34,3 +34,8 @@ php_extensions:
 
 # allow subnet
 nfs_allowed_subnet: "172.31.0.0/20"
+
+# Enable Load balancer
+nginx_lb_enable: true
+apache_lb_enable: false
+load_balancer_is_required: true

@@ -1,0 +1,4 @@
+---
+# Enable Nginx load balancer
+nginx_lb_enabled: false
+nginx_lb_required: "{{ load_balancer_is_required | default(false) }}"
