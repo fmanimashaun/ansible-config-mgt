@@ -24,7 +24,7 @@
     state: started
     enabled: true
   when:
-    - apache_lb_enable
+    - apache_lb_enabled
     - load_balancer_is_required
 
 - name: Enable required Apache modules for load balancing
@@ -60,5 +60,5 @@
     name: apache2
     state: stopped
   when:
-    - not apache_lb_enable
+    - not apache_lb_enabled
     - load_balancer_is_required
