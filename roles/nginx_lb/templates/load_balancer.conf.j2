@@ -1,15 +1,10 @@
 # Nginx Load Balancer Configuration
 
 upstream mycluster {
-    {% for server in nginx_lb_backend_servers | default([]) %}
-    server {{ server }}:80 weight=5;
-    {% endfor %}
-    {% if nginx_lb_backend_servers is not defined or nginx_lb_backend_servers | length == 0 %}
     # Use dynamic host entries from /etc/hosts managed by Ansible block
     {% for host in groups['web_servers'] | map('extract', hostvars) | list %}
-    server {{ host.ansible_host }}:80 weight=5;
+    server {{ host.backend_name | default(host.ansible_host, true) | default(host.inventory_hostname, true) }}:80 weight=5;
     {% endfor %}
-    {% endif %}
 }
 
 server {
