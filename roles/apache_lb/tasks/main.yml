@@ -1,63 +1,10 @@
-- name: Update apt cache
-  become: true
-  ansible.builtin.apt:
-    update_cache: true
-  when:
-    - load_balancer_is_required
-    - apache_lb_enabled
+---
+# Update the /etc/hosts file
+- name: Update the /etc/hosts file
+  ansible.builtin.include_tasks: update_hosts.yml
+  when: lb_type == 'apache'
 
-- name: Install Apache and required packages
-  become: true
-  ansible.builtin.apt:
-    name:
-      - apache2
-      - libxml2-dev
-    state: present
-  when:
-    - load_balancer_is_required
-    - apache_lb_enabled
-
-- name: Enable required Apache modules for load balancing
-  become: true
-  ansible.builtin.command: "a2enmod {{ item }}"
-  loop:
-    - rewrite
-    - proxy
-    - proxy_balancer
-    - proxy_http
-    - headers
-    - lbmethod_bytraffic
-  changed_when: false
-  when:
-    - load_balancer_is_required
-    - apache_lb_enabled
-
-- name: Deploy Apache load balancer configuration
-  become: true
-  ansible.builtin.template:
-    src: "000-default.conf.j2"
-    dest: "/etc/apache2/sites-available/000-default.conf"
-    mode: "0644"
-  notify: Restart Apache
-  when:
-    - load_balancer_is_required
-    - apache_lb_enabled
-
-# Start Apache if enabled
-- name: Ensure Apache is started for UAT if enabled
-  ansible.builtin.service:
-    name: apache2
-    state: started
-    enabled: true
-  when:
-    - apache_lb_enable
-    - load_balancer_is_required
-
-# Stop Apache if not enabled
-- name: Stop Apache if not required
-  ansible.builtin.service:
-    name: apache2
-    state: stopped
-  when:
-    - not apache_lb_enable
-    - load_balancer_is_required
+# Config Nginx Load Balancer
+- name: Config Nginx Load Balancer
+  ansible.builtin.include_tasks: configure_lb.yml
+  when: lb_type == 'apache'

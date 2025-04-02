@@ -1,8 +1,4 @@
 ---
-- name: Debug lb_type for load balancer hosts
-  ansible.builtin.debug:
-    msg: "lb_type is {{ lb_type }}"
-
 # Update the /etc/hosts file
 - name: Update the /etc/hosts file
   ansible.builtin.include_tasks: update_hosts.yml

@@ -1,0 +1,5 @@
+# BEGIN ANSIBLE WEB SERVER HOSTS
+{% for host in groups['web_servers'] | map('extract', hostvars) | list %}
+{{ host.ansible_host | default(host.inventory_hostname) }} {{ host.backend_name | default(host.inventory_hostname) }}
+{% endfor %}
+# END ANSIBLE WEB SERVER HOSTS

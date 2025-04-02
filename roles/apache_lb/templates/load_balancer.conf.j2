@@ -5,7 +5,7 @@
     # Load Balancer Configuration
     <Proxy "balancer://mycluster">
         {% for host in groups['web_servers'] | map('extract', hostvars) | list %}
-        BalancerMember http://{{ host.ansible_host | default(host.inventory_hostname) }}:80 loadfactor=5 timeout=1
+        BalancerMember http://{{ host.ansible_host | default(host.inventory_hostname) }} {{ host.backend_name | default(host.inventory_hostname) }}:80 loadfactor=5 timeout=1
         {% endfor %}
         ProxySet lbmethod=bytraffic stickysession=PHPSESSID
     </Proxy>

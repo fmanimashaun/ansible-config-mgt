@@ -1,0 +1,8 @@
+---
+# Ansible managed /etc/hosts entries for web servers
+- name: Update /etc/hosts with current web server entries
+  become: true
+  ansible.builtin.blockinfile:
+    path: /etc/hosts
+    marker: "# {mark} ANSIBLE WEB SERVER HOSTS"
+    block: "{{ lookup('template', 'hosts_web_servers.j2') }}"
