@@ -17,6 +17,17 @@
     - load_balancer_is_required
     - apache_lb_enabled
 
+- name: Deploy Apache load balancer configuration
+  become: true
+  ansible.builtin.template:
+    src: "load_balancer.conf.j2"
+    dest: "/etc/apache2/sites-available/000-default.conf"
+    mode: "0644"
+  notify: Restart Apache
+  when:
+    - load_balancer_is_required
+    - apache_lb_enabled
+
 # Start Apache if enabled
 - name: Ensure Apache is started for UAT if enabled
   ansible.builtin.service:
@@ -38,17 +49,6 @@
     - headers
     - lbmethod_bytraffic
   changed_when: false
-  notify: Restart Apache
-  when:
-    - load_balancer_is_required
-    - apache_lb_enabled
-
-- name: Deploy Apache load balancer configuration
-  become: true
-  ansible.builtin.template:
-    src: "load_balancer.conf.j2"
-    dest: "/etc/apache2/sites-available/000-default.conf"
-    mode: "0644"
   notify: Restart Apache
   when:
     - load_balancer_is_required
