@@ -1,0 +1,18 @@
+---
+# Stop Nginx if not enabled
+- name: Ensure Nginx is stopped if load balancing is required but not enabled
+  become: true
+  ansible.builtin.systemd:
+    name: nginx
+    state: stopped
+  when:
+    - not nginx_lb_enabled
+    - load_balancer_is_required
+
+# Stop Nginx if load balancer not required
+- name: Ensure Nginx is stopped if load balancing is not required
+  become: true
+  ansible.builtin.systemd:
+    name: nginx
+    state: stopped
+  when: not load_balancer_is_required

@@ -1,0 +1,19 @@
+---
+  # Stop Apache if not enabled
+- name: Stop Apache if not required
+  become: true
+  ansible.builtin.service:
+    name: apache2
+    state: stopped
+  when:
+    - not apache_lb_enabled
+    - load_balancer_is_required
+
+  # Stop Apache if load balancer not required
+- name: Stop Apache if not required
+  become: true
+  ansible.builtin.service:
+    name: apache2
+    state: stopped
+  when:
+    - not load_balancer_is_required
