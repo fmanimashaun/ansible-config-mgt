@@ -1,0 +1,19 @@
+<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html
+
+    # Load Balancer Configuration
+    <Proxy "balancer://mycluster">
+        {% for host in groups['web_servers'] | map('extract', hostvars) | list %}
+        BalancerMember http://{{ host.ansible_host | default(host.inventory_hostname) }}:80 loadfactor=5 timeout=1
+        {% endfor %}
+        ProxySet lbmethod=bytraffic stickysession=PHPSESSID
+    </Proxy>
+
+    ProxyPreserveHost On
+    ProxyPass / balancer://mycluster/
+    ProxyPassReverse / balancer://mycluster/
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
