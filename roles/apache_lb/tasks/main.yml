@@ -1,9 +1,4 @@
 ---
-# Set up Apache Load Balancer status
-- name: Set up Apache Load Balancer status
-  ansible.builtin.include_tasks: lb_status.yml
-  when: lb_type == 'apache'
-
 # Update the /etc/hosts file
 - name: Update the /etc/hosts file
   ansible.builtin.include_tasks: update_hosts.yml

@@ -30,5 +30,6 @@
 - name: Configure load balancer
   hosts: lb_servers
   roles:
+    - { role: cleanup_lb }
     - { role: nginx_lb, when: load_balancer_is_required and nginx_lb_enabled }
     - { role: apache_lb, when: load_balancer_is_required and apache_lb_enabled }

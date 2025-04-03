@@ -1,0 +1,10 @@
+---
+# Stop Nginx Load Balancer
+- name: Set up Nginx Load Balancer status
+  ansible.builtin.include_tasks: nginx_cleanup.yml
+  when: lb_type == 'nginx'
+
+# Stop Apache Load Balancer
+- name: Set up Apache Load Balancer status
+  ansible.builtin.include_tasks: apache_cleanup.yml
+  when: lb_type == 'apache'
