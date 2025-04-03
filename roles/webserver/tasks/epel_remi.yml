@@ -1,27 +1,30 @@
 ---
 - name: Install repositories and switch PHP module stream
   become: true
-  when: ([ epel_repo_url, epel_gpg_key_url, remi_repo_url, remi_gpg_key_url, php_version ] | select('defined') | list | length) == 5
+  when: ([ php_version ] | select('defined') | list | length) == 1
   block:
+
     - name: Import EPEL GPG key
       ansible.builtin.rpm_key:
         state: present
-        key: "{{ epel_gpg_key_url }}"
+        key: "{{ webserver_epel_gpg_key_url }}"
 
-    - name: Install EPEL repository
+    - name: Install EPEL package
       ansible.builtin.dnf:
-        name: "{{ epel_repo_url }}"
+        name: "{{ webserver_epel_package_url }}"
         state: present
-
-    - name: Import Remi GPG key
+      notify: Update package cache
+    
+    - name: Install Remi GPG key
       ansible.builtin.rpm_key:
         state: present
-        key: "{{ remi_gpg_key_url }}"
-
-    - name: Install Remi repository
+        key: "{{ webserver_remi_gpg_key_url }}"
+    
+    - name: Install Remi package
       ansible.builtin.dnf:
-        name: "{{ remi_repo_url }}"
+        name: "{{ webserver_remi_package_url }}"
         state: present
+      notify: Update package cache
 
     - name: Switch to PHP module stream from Remi
       ansible.builtin.dnf:

@@ -5,3 +5,7 @@
     name: httpd
     state: restarted
     enabled: true
+
+- name: Update package cache
+  ansible.builtin.package:
+    update_cache: true
