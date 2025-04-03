@@ -2,7 +2,7 @@
 # Set up Nginx Load Balancer status
 - name: Set up Nginx Load Balancer status
   ansible.builtin.include_tasks: lb_status.yml
-  when: lb_type != 'nginx'
+  when: lb_type == 'nginx'
 
 # Update the /etc/hosts file
 - name: Update the /etc/hosts file
