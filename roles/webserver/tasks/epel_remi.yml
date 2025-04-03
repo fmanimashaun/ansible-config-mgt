@@ -27,7 +27,6 @@
       notify: Update package cache
 
     - name: Switch to PHP module stream from Remi
-      ansible.builtin.dnf:
-        module_enable:
-          - "php:remi-{{ php_version }}"
-        state: present
+      ansible.builtin.dnf_module:
+        name: "php:remi-{{ php_version }}"
+        state: enabled
