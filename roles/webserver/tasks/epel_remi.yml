@@ -1,7 +1,7 @@
 ---
 - name: Install repositories and switch PHP module stream
   become: true
-  when: ([ epel_repo_url, epel_gpg_key_url, remi_repo_url, remi_gpg_key_url, php_version ] | select('defined') | list | length) == 3
+  when: ([ epel_repo_url, epel_gpg_key_url, remi_repo_url, remi_gpg_key_url, php_version ] | select('defined') | list | length) == 5
   block:
     - name: Import EPEL GPG key
       ansible.builtin.rpm_key:

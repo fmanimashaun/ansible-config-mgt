@@ -1,5 +1,5 @@
 ---
-- name: Ensure local mount point exists for web content 
+- name: Ensure local mount point exists for web content
   become: true
   ansible.builtin.file:
     path: /var/www
