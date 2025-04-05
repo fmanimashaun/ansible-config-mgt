@@ -55,7 +55,7 @@
   register: certbot_obtain
   failed_when: certbot_obtain.rc not in [0, 1]
   changed_when: certbot_obtain.rc == 0
-  notify: 
+  notify:
     - Restart Apache
   when:
     - load_balancer_is_required
@@ -74,6 +74,3 @@
   when:
     - load_balancer_is_required
     - apache_lb_enabled
-
-
-
