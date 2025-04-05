@@ -1,4 +1,12 @@
 <VirtualHost *:80>
+
+    {% if apache_lb_server_name | default('') != '' %}
+    ServerName {{ apache_lb_server_name }}
+    ServerAlias www.{{ apache_lb_server_name }}
+    {% else %}
+    ServerName _
+    {% endif %}
+
     ServerAdmin webmaster@localhost
     DocumentRoot /var/www/html
 

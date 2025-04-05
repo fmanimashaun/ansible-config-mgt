@@ -9,7 +9,12 @@ upstream mycluster {
 
 server {
     listen 80;
-    server_name {{ nginx_lb_server_name | default('_') }};
+
+    {% if nginx_lb_server_name | default('') != '' %}
+    server_name {{ nginx_lb_server_name  }} www.{{ nginx_lb_server_name  }};
+    {% else %}
+    server_name _;
+    {% endif %}
 
     location / {
         proxy_pass http://mycluster;

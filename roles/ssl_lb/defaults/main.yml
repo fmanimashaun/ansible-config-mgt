@@ -1,0 +1,3 @@
+---
+ssl_lb_email: "{{ ssl_email | default('email@example.com') }}"
+ssl_lb_domain_names: "{{ domain_names | default('example.com') }}"
