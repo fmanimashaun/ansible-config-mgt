@@ -47,7 +47,7 @@
 - name: Obtain SSL certificate for Apache using Certbot
   become: true
   ansible.builtin.shell: >
-    certbot --apache --non-interactive --agree-tos
+    certbot --nginx --non-interactive --agree-tos
     --email {{ nginx_lb_certbot_email }}
     --domains {{ nginx_lb_server_name }},www.{{ nginx_lb_server_name }}
   args:
