@@ -49,6 +49,7 @@
   ansible.builtin.shell: >
     certbot --apache --non-interactive --agree-tos
     --email {{ apache_lb_certbot_email }}
+    --domains {{ apache_lb_server_name }},www.{{ apache_lb_server_name }}
   args:
     creates: "/etc/letsencrypt/live/{{ apache_lb_server_name }}/fullchain.pem"
   register: certbot_obtain
@@ -59,6 +60,7 @@
   when:
     - load_balancer_is_required
     - apache_lb_enabled
+
 
 # Create the automatic renewal
 - name: Schedule automatic Certbot certificate renewal
