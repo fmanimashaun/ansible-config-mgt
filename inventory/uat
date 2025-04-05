@@ -11,7 +11,7 @@
 
 [lb_servers]
 172.31.3.63 ansible_ssh_user=ubuntu lb_type=nginx domain_name=nginx.facilitiesmanager.com.ng
-172.31.10.4 ansible_ssh_user=ubuntu lb_type=apache domain_name=apache.facilitiesmanager.com.ng
+172.31.11.254 ansible_ssh_user=ubuntu lb_type=apache domain_name=apache.facilitiesmanager.com.ng
 
 [all:vars]
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
