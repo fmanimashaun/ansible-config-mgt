@@ -3,3 +3,4 @@
 nginx_lb_enabled: false
 nginx_lb_required: "{{ load_balancer_is_required | default(false) }}"
 nginx_lb_server_name: "{{ domain_name | default('') }}"
+nginx_lb_certbot_email: "{{ certbot_email | default('email@example.com') }}"

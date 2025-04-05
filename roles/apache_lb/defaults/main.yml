@@ -3,3 +3,4 @@
 apache_lb_enabled: false
 apache_lb_required: "{{ load_balancer_is_required | default(false) }}"
 apache_lb_server_name: "{{ domain_name | default('') }}"
+apache_lb_certbot_email: "{{ certbot_email | default('email@example.com') }}"
