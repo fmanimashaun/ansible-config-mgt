@@ -6,6 +6,9 @@
     name: snapd
     state: present
     update_cache: true
+  when:
+    - load_balancer_is_required
+    - nginx_lb_enabled
 
 # Ensure snapd is running and enabled
 - name: Ensure snapd service is running
@@ -14,6 +17,9 @@
     name: snapd
     state: started
     enabled: true
+  when:
+    - load_balancer_is_required
+    - nginx_lb_enabled
 
 # Install Certbot via snap
 - name: Install Certbot via snap
@@ -22,7 +28,9 @@
     name: certbot
     classic: true
     state: present
-  register: certbot_install
+  when:
+    - load_balancer_is_required
+    - nginx_lb_enabled
 
 # Create symlink for Certbot
 - name: Create symlink for certbot
@@ -31,4 +39,35 @@
     src: /snap/bin/certbot
     dest: /usr/bin/certbot
     state: link
-    force: true
+  when:
+    - load_balancer_is_required
+    - nginx_lb_enabled
+
+# Obtain SSL certificate for Apache using Certbot
+- name: Obtain SSL certificate for Apache using Certbot
+  become: true
+  ansible.builtin.shell: >
+    certbot --apache --non-interactive --agree-tos
+    --email {{ nginx_lb_certbot_email }}
+    --domains {{ nginx_lb_server_name }},www.{{ nginx_lb_server_name }}
+  args:
+    creates: "/etc/letsencrypt/live/{{ nginx_lb_server_name }}/fullchain.pem"
+  register: certbot_obtain
+  notify: 
+    - Reload Nginx
+  when:
+    - load_balancer_is_required
+    - nginx_lb_enabled
+
+# Create the automatic renewal
+- name: Schedule automatic Certbot certificate renewal
+  become: true
+  ansible.builtin.cron:
+    name: "Renew Let's Encrypt certificates"
+    minute: "0"
+    hour: "3"
+    job: "certbot renew --quiet"
+    user: root
+  when:
+    - load_balancer_is_required
+    - nginx_lb_enabled
