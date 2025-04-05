@@ -60,6 +60,7 @@
     - proxy_balancer
     - proxy_http
     - headers
+    - ssl
     - lbmethod_bytraffic
   changed_when: false
   notify: Restart Apache
