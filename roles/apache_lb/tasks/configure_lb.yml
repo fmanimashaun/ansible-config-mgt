@@ -1,3 +1,5 @@
+---
+# Update the apt cache
 - name: Update apt cache
   become: true
   ansible.builtin.apt:
@@ -6,6 +8,7 @@
     - load_balancer_is_required
     - apache_lb_enabled
 
+# Install Apache and required packages
 - name: Install Apache and required packages
   become: true
   ansible.builtin.apt:
@@ -17,28 +20,37 @@
     - load_balancer_is_required
     - apache_lb_enabled
 
-- name: Deploy Apache load balancer configuration
+# Disable default Apache site
+- name: Disable default Apache site
+  become: true
+  ansible.builtin.command: "a2dissite 000-default.conf"
+  notify: Restart Apache
+  when:
+    - load_balancer_is_required
+    - apache_lb_enabled
+
+# Deploy dedicated Apache load balancer configuration
+- name: Deploy dedicated Apache load balancer configuration
   become: true
   ansible.builtin.template:
     src: "load_balancer.conf.j2"
-    dest: "/etc/apache2/sites-available/000-default.conf"
+    dest: "/etc/apache2/sites-available/load_balancer.conf"
     mode: "0644"
   notify: Restart Apache
   when:
     - load_balancer_is_required
     - apache_lb_enabled
 
-# Start Apache if enabled
-- name: Ensure Apache is started for UAT if enabled
+# Enable load balancer site configuration
+- name: Enable load balancer site configuration
   become: true
-  ansible.builtin.service:
-    name: apache2
-    state: started
-    enabled: true
+  ansible.builtin.command: "a2ensite load_balancer.conf"
+  notify: Restart Apache
   when:
-    - apache_lb_enabled
     - load_balancer_is_required
+    - apache_lb_enabled
 
+# Enable required Apache modules for load balancing
 - name: Enable required Apache modules for load balancing
   become: true
   ansible.builtin.command: "a2enmod {{ item }}"
@@ -55,12 +67,23 @@
     - load_balancer_is_required
     - apache_lb_enabled
 
-# Stop Apache if not enabled
+# Ensure Apache is started if enabled
+- name: Ensure Apache is started if enabled
+  become: true
+  ansible.builtin.service:
+    name: apache2
+    state: started
+    enabled: true
+  when:
+    - load_balancer_is_required
+    - apache_lb_enabled
+
+# Ensure Apache is stopped if not enabled
 - name: Stop Apache if not required
   become: true
   ansible.builtin.service:
     name: apache2
     state: stopped
   when:
-    - not apache_lb_enabled
     - load_balancer_is_required
+    - not apache_lb_enabled
