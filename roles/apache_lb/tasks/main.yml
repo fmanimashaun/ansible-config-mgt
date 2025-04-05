@@ -4,7 +4,12 @@
   ansible.builtin.include_tasks: update_hosts.yml
   when: lb_type == 'apache'
 
-# Config Nginx Load Balancer
-- name: Config Nginx Load Balancer
+# Config Apache Load Balancer
+- name: Config Apache Load Balancer
   ansible.builtin.include_tasks: configure_lb.yml
+  when: lb_type == 'apache'
+
+# Config Apache Load Balancer SSL certificate
+- name: Config Apache Load Balancer SSL certificate
+  ansible.builtin.include_tasks: ssl_lb.yml
   when: lb_type == 'apache'
