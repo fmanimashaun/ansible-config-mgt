@@ -7,14 +7,35 @@ upstream mycluster {
     {% endfor %}
 }
 
+# HTTP server block: Redirect all HTTP traffic to HTTPS
 server {
     listen 80;
-
     {% if nginx_lb_server_name | default('') != '' %}
-    server_name {{ nginx_lb_server_name  }} www.{{ nginx_lb_server_name  }};
+    server_name {{ nginx_lb_server_name }} www.{{ nginx_lb_server_name }};
     {% else %}
     server_name _;
     {% endif %}
+    
+    # Redirect to HTTPS
+    return 301 https://$host$request_uri;
+}
+
+# HTTPS server block: Handle SSL traffic
+server {
+    listen 443 ssl;
+    {% if nginx_lb_server_name | default('') != '' %}
+    server_name {{ nginx_lb_server_name }} www.{{ nginx_lb_server_name }};
+    {% else %}
+    server_name _;
+    {% endif %}
+
+    # Specify certificate locations (Certbot will update these files)
+    ssl_certificate /etc/letsencrypt/live/{{ nginx_lb_server_name }}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{ nginx_lb_server_name }}/privkey.pem;
+
+    # Optionally, specify additional SSL settings
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
 
     location / {
         proxy_pass http://mycluster;

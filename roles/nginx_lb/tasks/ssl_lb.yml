@@ -44,7 +44,7 @@
     - nginx_lb_enabled
 
 # Obtain SSL certificate for Nginx using Certbot
-- name: Obtain SSL certificate for Apache using Certbot
+- name: Obtain SSL certificate for Nginx using Certbot
   become: true
   ansible.builtin.shell: >
     certbot --nginx --non-interactive --agree-tos
@@ -53,7 +53,7 @@
   args:
     creates: "/etc/letsencrypt/live/{{ nginx_lb_server_name }}/fullchain.pem"
   register: certbot_obtain
-  notify: 
+  notify:
     - Reload Nginx
   when:
     - load_balancer_is_required
