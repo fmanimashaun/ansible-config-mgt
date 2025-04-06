@@ -14,12 +14,12 @@
         name: "{{ webserver_epel_package_url }}"
         state: present
       notify: Update package cache
-    
+
     - name: Install Remi GPG key
       ansible.builtin.rpm_key:
         state: present
         key: "{{ webserver_remi_gpg_key_url }}"
-    
+
     - name: Install Remi package
       ansible.builtin.dnf:
         name: "{{ webserver_remi_package_url }}"

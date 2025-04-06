@@ -13,10 +13,6 @@ mysql_users:
 tooling_repo: "https://github.com/fmanimashaun/tooling.git"
 
 # Define the PHP version and repositories
-epel_repo_url: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm"
-epel_gpg_key_url: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-9"
-# remi_repo_url: "https://rpms.remirepo.net/enterprise/remi-release-9.rpm"
-# remi_gpg_key_url: "https://rpms.remirepo.net/RPM-GPG-KEY-remi"
 php_version: "8.4"
 
 
