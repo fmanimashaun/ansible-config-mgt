@@ -23,7 +23,7 @@
     - nfs-server
 
 # Set up Apache and PHP on web servers
-- name:  Set up Apache and PHP on web servers
+- name: Set up Apache and PHP on web servers
   ansible.builtin.import_playbook: "../static-assignments/uat-webserver.yml"
 
 # Configure load balancers
